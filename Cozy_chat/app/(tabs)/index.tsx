@@ -6,10 +6,12 @@ import Post from '@/components/Post';
 import { getItemWithSetter } from '@/utils/local_storage';
 
 import backgroundImage from '@/assets/images/background.jpg'; 
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 const App = () => {
-  const [userName, setUserName] = useState<string>('');
-  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [isModalVisible, setModalVisible] = useState(false);
   const [posts, setPosts] = useState([
     { id: '1', title: 'Post 1', description: 'This is the first post' },
     { id: '2', title: 'Post 2', description: 'This is the second post' },
@@ -39,16 +41,20 @@ const App = () => {
     handleCloseModal();
   };
 
+  const navigateToChatroom = () => {
+    router.push('./chatroom');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
       <ImageBackground
-        source={backgroundImage} // Use the imported image
+        source={backgroundImage} 
         style={styles.imageBackground}
       >
         <View style={styles.header}>
           <TouchableOpacity onPress={handleOpenModal}>
-            <Text style={styles.headerButton}>Create User</Text>
+          <Ionicons name="logo-octocat" size={32} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Cozy chat</Text>
           <TouchableOpacity>
@@ -67,6 +73,9 @@ const App = () => {
           onSave={handleSaveUserName}
           onDelete={handleDeleteUser}
         />
+        <TouchableOpacity style={styles.chatIcon} onPress={navigateToChatroom}>
+          <Ionicons name="chatbubbles" size={32} color="white" />
+        </TouchableOpacity>
       </ImageBackground>
     </SafeAreaView>
   );
@@ -87,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#b3b3f5', 
   },
   headerButton: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: 'bold',
     color: '#4343ba',
   },
@@ -98,6 +107,14 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     padding: 16,
+  },
+  chatIcon: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    backgroundColor: '#4343ba',
+    borderRadius: 50,
+    padding: 15,
   },
 });
 
