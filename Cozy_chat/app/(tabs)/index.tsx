@@ -3,7 +3,7 @@ import { View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, StyleS
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NameModal from '@/components/NameModal';
 import Post from '@/components/Post';
-import { getItemWithSetter } from '@/utils/local_storage'; // Adjust the import path as necessary
+import { getItemWithSetter } from '@/utils/local_storage';
 
 import backgroundImage from '@/assets/images/background.jpg'; 
 
@@ -50,7 +50,7 @@ const App = () => {
           <TouchableOpacity onPress={handleOpenModal}>
             <Text style={styles.headerButton}>Create User</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Home</Text>
+          <Text style={styles.headerTitle}>Cozy chat</Text>
           <TouchableOpacity>
             <Text style={styles.headerButton}>New Post</Text>
           </TouchableOpacity>
@@ -88,10 +88,11 @@ const styles = StyleSheet.create({
   },
   headerButton: {
     fontSize: 16,
-    color: '#007BFF',
+    fontWeight: 'bold',
+    color: '#4343ba',
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   userName: {
