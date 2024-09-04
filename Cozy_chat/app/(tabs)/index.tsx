@@ -1,70 +1,103 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NameModal from '@/components/NameModal';
+import Post from '@/components/Post';
+import { getItemWithSetter } from '@/utils/local_storage'; // Adjust the import path as necessary
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import backgroundImage from '@/assets/images/background.jpg'; 
 
-export default function HomeScreen() {
+const App = () => {
+  const [userName, setUserName] = useState<string>('');
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [posts, setPosts] = useState([
+    { id: '1', title: 'Post 1', description: 'This is the first post' },
+    { id: '2', title: 'Post 2', description: 'This is the second post' },
+  ]);
+
+  useEffect(() => {
+    getItemWithSetter('user', setUserName);
+  }, []);
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleSaveUserName = async (name: string) => {
+    await AsyncStorage.setItem('user', name);
+    setUserName(name);
+    handleCloseModal();
+  };
+
+  const handleDeleteUser = async () => {
+    await AsyncStorage.removeItem('user');
+    setUserName('');
+    handleCloseModal();
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <SafeAreaView style={styles.container}>
+      <StatusBar />
+      <ImageBackground
+        source={backgroundImage} // Use the imported image
+        style={styles.imageBackground}
+      >
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleOpenModal}>
+            <Text style={styles.headerButton}>Create User</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Home</Text>
+          <TouchableOpacity>
+            <Text style={styles.headerButton}>New Post</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.userName}>{userName ? `Welcome, ${userName}` : 'No user created'}</Text>
+        <FlatList
+          data={posts}
+          renderItem={({ item }) => <Post title={item.title} description={item.description} />}
+          keyExtractor={item => item.id}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <NameModal
+          visible={isModalVisible}
+          onClose={handleCloseModal}
+          onSave={handleSaveUserName}
+          onDelete={handleDeleteUser}
+        />
+      </ImageBackground>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  imageBackground: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
+  header: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: '#b3b3f5', 
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  headerButton: {
+    fontSize: 16,
+    color: '#007BFF',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  userName: {
+    fontSize: 16,
+    padding: 16,
   },
 });
+
+export default App;
