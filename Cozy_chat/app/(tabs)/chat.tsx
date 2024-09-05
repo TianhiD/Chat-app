@@ -52,14 +52,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#cecef2',
+
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    paddingTop: 50,
   },
   messageItem: {
     marginBottom: 10,
+    borderRadius: 10,
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    alignSelf: 'flex-start',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -68,11 +75,14 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    borderColor: 'gray',
+    borderColor: '#4343ba',
+    borderRadius: 10,
     borderWidth: 1,
     padding: 10,
     marginRight: 10,
+    backgroundColor: 'white',
   },
+  
 });
 
 export default Chat;
