@@ -9,6 +9,7 @@ import backgroundImage from '@/assets/images/background.jpg';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
+
 const App = () => {
   const [userName, setUserName] = useState<string | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -54,7 +55,7 @@ const App = () => {
       >
         <View style={styles.header}>
           <TouchableOpacity onPress={handleOpenModal}>
-          <Ionicons name="logo-octocat" size={32} />
+          <Ionicons name="logo-octocat" size={32} color="#4343ba" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Cozy chat</Text>
           <TouchableOpacity>
